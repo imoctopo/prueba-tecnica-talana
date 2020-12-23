@@ -26,7 +26,7 @@ services:
   celery:
     container_name: celery
     build: .
-    command: celery -A conf worker -B --loglevel=DEBUG
+    command: celery -A config worker -B --loglevel=DEBUG
     env_file:
       - ./.env
     volumes:

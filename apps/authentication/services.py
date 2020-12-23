@@ -9,13 +9,13 @@ from config.settings import MAILGUN_API_USERNAME, MAILGUN_API_URL, MAILGUN_API_K
 from .helpers import sign_up_confirm_account_token
 
 
-def send_account_confirmation_email(user: User):
+def send_account_confirmation_email(user_id: int):
+    user: User = User.objects.get(pk=user_id)
     from_ = f'accounts@{MAILGUN_API_USERNAME}'
     subject = 'Confirmar Creación de Cuenta'
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     token = sign_up_confirm_account_token.make_token(user)
     url = f"{SITE_URL}{reverse('change_password')}?uid={uid}&token={token}"
-    print(url)
     body = render_to_string('authentication/mailing/activate_account.html', {
         'user': user,
         'uid': uid,

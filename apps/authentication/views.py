@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from .helpers import sign_up_confirm_account_token
 
 from .serializers import SignUpSerializer
-from .services import send_account_confirmation_email
+from .tasks import task_send_account_confirmation_email
 
 
 class SignUpGenericGenericViewSet(mixins.RetrieveModelMixin,
@@ -25,7 +25,7 @@ class SignUpGenericGenericViewSet(mixins.RetrieveModelMixin,
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        send_account_confirmation_email(user=user)
+        task_send_account_confirmation_email.delay(user_id=user.id)
         return Response({
             'user': self.get_serializer(user).data,
             'message': 'Usuario creado correctamente. Por favor revise su email para activar su cuenta.'

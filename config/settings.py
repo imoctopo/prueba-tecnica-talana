@@ -23,7 +23,8 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     'apps.authentication.apps.AuthenticationConfig',
-    'apps.giveaway.apps.GiveawayConfig'
+    'apps.giveaway.apps.GiveawayConfig',
+    'apps.celery.apps.CeleryAppConfig'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -108,9 +109,9 @@ MAILGUN_DEFAULT_SENDER = 'contacto'
 
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
 
-CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 
-CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_ACCEPT_CONTENT = 'redis://redis:6379/0'
 
 CELERY_RESULT_SERIALIZER = 'json'
 
