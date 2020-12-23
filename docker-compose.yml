@@ -23,5 +23,25 @@ services:
       - static_volume:/app/static
     command: bash -c "python manage.py migrate && python manage.py collectstatic --no-input --clear && gunicorn --workers 4 --bind 0.0.0.0:8000 --timeout 90 config.wsgi"
 
+  celery:
+    container_name: celery
+    build: .
+    command: celery -A conf worker -B --loglevel=DEBUG
+    env_file:
+      - ./.env
+    volumes:
+      - .:/app
+    links:
+      - redis
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_volume:/data
+
 volumes:
   static_volume:
+  redis_volume:

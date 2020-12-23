@@ -22,7 +22,8 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    'apps.authentication.apps.AuthenticationConfig'
+    'apps.authentication.apps.AuthenticationConfig',
+    'apps.giveaway.apps.GiveawayConfig'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -92,3 +93,25 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+APPEND_SLASH = False
+
+SITE_URL = 'http://localhost:8000'  # Should be in .env
+
+MAILGUN_API_USERNAME = os.environ.get('MAILGUN_API_USERNAME')
+
+MAILGUN_API_URL = f'https://api.mailgun.net/v3/{MAILGUN_API_USERNAME}'
+
+MAILGUN_API_KEY = os.environ.get('MAILGUN_API_KEY')
+
+MAILGUN_DEFAULT_SENDER = 'contacto'
+
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
+
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+
+CELERY_RESULT_SERIALIZER = 'json'
+
+CELERY_TASK_SERIALIZER = 'json'

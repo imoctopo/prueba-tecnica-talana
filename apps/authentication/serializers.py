@@ -12,6 +12,12 @@ class SignUpSerializer(serializers.ModelSerializer):
             },
             'email': {
                 'required': True
+            },
+            'first_name': {
+                'required': True
+            },
+            'last_name': {
+                'required': True
             }
         }
 
@@ -22,9 +28,15 @@ class SignUpSerializer(serializers.ModelSerializer):
             'email': validated_data['email'],
             'first_name': validated_data['first_name'],
             'last_name': validated_data['last_name'],
-            'is_active ': False
+            'is_active': False  # False to make the user activate its account
         }
         # Check if the emails is not used by another user
         if User.objects.filter(email=data['email']).exists():
-            raise exceptions.ValidationError(detail='Ya existe un usuario usando este email.')
+            raise exceptions.ValidationError({'email': ['Ya existe un usuario usando este email.']})
         return User.objects.create_user(**data)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'first_name', 'last_name')
