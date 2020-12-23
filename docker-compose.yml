@@ -1,0 +1,27 @@
+version: "3"
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    ports:
+      - "8000:80"
+    volumes:
+      - ./deploy/nginx:/etc/nginx/conf.d
+      - static_volume:/app/static
+    depends_on:
+      - app
+
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - static_volume:/app/static
+    command: bash -c "python manage.py migrate && python manage.py collectstatic --no-input --clear && gunicorn --workers 4 --bind 0.0.0.0:8000 --timeout 90 config.wsgi"
+
+volumes:
+  static_volume:
